@@ -27,11 +27,15 @@ export class LoginComponent implements OnInit {
   login() {    
     this.loginUser.password = this.util.encrypt(this.loginUser.password)
     this.apiservice.loginUser(this.loginUser).subscribe(res => {
-      localStorage.setItem('token', res.token);
-      this.router.navigate(['/home']);
+      if(res.user.active.data[0] !== 1){  // to check if the user is active
+        this.util.errMsg = "You're not an active user, please contact administrator!";
+      }else{
+        localStorage.setItem('token', res.user.token);
+        this.router.navigate(['/home']);        
+      }      
     },
       err => {
-        this.util.errMsg = "Invalid Input data";
+        this.util.errMsg = "Wrong Username or Password";
       });
   }
 

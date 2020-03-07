@@ -3,14 +3,17 @@
     <h1 class="display-4">Make Decision</h1>
     <p class="lead">Decide what you want from the higher officials...</p>
     <hr class="my-4">
-    <a routerLink="/login" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-lg"
+    <a routerLink="/login" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-md"
       *ngIf="!this.apiservice.loggedIn()" href="#" role="button">Login</a>
-    <a routerLink="/register" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-lg"
+    <a routerLink="/register" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-md"
       *ngIf="!this.apiservice.loggedIn()" href="#" role="button">Register</a>
 
     <div class="text-right"> 
-      <a routerLink="/register" routerLinkActive="active" class="btn btn-primary btn-lg"
-      *ngIf="this.apiservice.loggedIn()" (click)="this.apiservice.logoutUser()" href="#" role="button">Logout</a>           
+
+      <a routerLink="/login" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-md"
+      href="#" role="button">Admin panel</a>
+
+      <button *ngIf="this.apiservice.loggedIn()" (click)="this.apiservice.logoutUser()">Logout</button>
     </div>
 
   </div>

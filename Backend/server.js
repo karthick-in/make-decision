@@ -83,10 +83,17 @@ app.post('/login', function (req, res) {
       user = results[0];
       let payload = { subject: user.id }
       let token = jwt.sign(payload, tokenSecretKey)
-      res.status(200).send({ token });
+      user = customizeResult(user, token);
+      res.status(200).send({ user });
     }
   });
 });
+
+function customizeResult(values, token){
+  delete values['password'];
+  values['token'] = token;
+  return values;  
+}
 
 
 app.put('/customer', function (req, res) {
