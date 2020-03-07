@@ -105,6 +105,10 @@ app.delete('/customer', function (req, res) {
   });
 });
 
+app.get('/verifytoken', verifyToken, (req, res) => {
+  res.status(200).end();
+});
+
 app.get('*', (req, res) => {
   console.log("Unknown page request just made")
   res.sendStatus(404).end("Page not found!");
@@ -122,7 +126,12 @@ function verifyToken(req, res, next) {
   if(token === 'null') {
     return res.status(401).send('Unauthorized request')    
   }
-  let payload = jwt.verify(token, tokenSecretKey)
+  try {
+    var payload = jwt.verify(token, tokenSecretKey)    
+  } catch (error) {
+    return res.status(401).end();
+  }
+  
   if(!payload) {
     return res.status(401).send('Unauthorized request')    
   }

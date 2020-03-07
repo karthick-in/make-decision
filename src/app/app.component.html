@@ -7,6 +7,12 @@
       *ngIf="!this.apiservice.loggedIn()" href="#" role="button">Login</a>
     <a routerLink="/register" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-lg"
       *ngIf="!this.apiservice.loggedIn()" href="#" role="button">Register</a>
+
+    <div class="text-right"> 
+      <a routerLink="/register" routerLinkActive="active" class="btn btn-primary btn-lg"
+      *ngIf="this.apiservice.loggedIn()" (click)="this.apiservice.logoutUser()" href="#" role="button">Logout</a>           
+    </div>
+
   </div>
 
   <router-outlet></router-outlet>

@@ -24,15 +24,13 @@ export class LoginComponent implements OnInit {
     this.util.errMsg = "";
   }
 
-  login() {
+  login() {    
     this.loginUser.password = this.util.encrypt(this.loginUser.password)
     this.apiservice.loginUser(this.loginUser).subscribe(res => {
-      //console.log(res)
       localStorage.setItem('token', res.token);
       this.router.navigate(['/home']);
     },
       err => {
-        //console.log("Error at Login funtion "+JSON.stringify(err));
         this.util.errMsg = "Invalid Input data";
       });
   }

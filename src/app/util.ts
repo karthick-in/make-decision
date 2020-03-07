@@ -16,6 +16,7 @@ export class Util {
         return CryptoJS.AES.decrypt(textToDecrypt, this.secretKey.trim()).toString(CryptoJS.enc.Utf8);
     }
 
+    // TODO: remove this function
     resetValues(clearUser : User) : User{
         this.errMsg = "";
         clearUser = {} as User;

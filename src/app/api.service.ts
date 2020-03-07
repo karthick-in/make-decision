@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -9,6 +9,7 @@ export class ApiService {
 
   private _registerUrl = "http://localhost:3000/register";
   private _loginUrl = "http://localhost:3000/login";
+  private _verifyTokenUrl = "http://localhost:3000/verifyToken";
 
   constructor(
     private http: HttpClient,
@@ -30,11 +31,28 @@ export class ApiService {
 
   getToken() {
     let token = localStorage.getItem('token');
-    //console.log("Here : " + token);
     return token;
   }
 
-  loggedIn() {
-    return !!localStorage.getItem('token')
+  loggedIn() : boolean{
+    return !!localStorage.getItem('token');
+  }
+
+  // Use this function to find whether the current user is a verified token user...
+  isVerifiedLogin(){
+    this.verifyToken().subscribe(
+      res => console.log("verified"),
+      err => {
+        if( err instanceof HttpErrorResponse ) {
+          if (err.status === 401) { // unauthorized user
+            this.logoutUser();     
+          }
+        }
+      }
+    )
+  }
+
+  verifyToken(){
+    return this.http.get<any>(this._verifyTokenUrl);
   }
 }
