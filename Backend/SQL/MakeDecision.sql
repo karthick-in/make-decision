@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 23, 2020 at 03:27 PM
+-- Generation Time: Mar 08, 2020 at 06:26 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -132,25 +132,26 @@ CREATE TABLE `Users` (
   `name` varchar(255) DEFAULT NULL,
   `active` bit(1) DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
-  `email` varchar(255) NOT NULL
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `Users`
 --
 
-INSERT INTO `Users` (`id`, `role_id`, `name`, `active`, `created_time`, `email`) VALUES
-(1, 1, 'admin_user', b'1', '2020-02-22 19:57:14', 'a@test.com'),
-(2, 2, 'Raymon', b'1', '2020-02-22 19:58:35', 'b@test.com'),
-(3, 2, 'disabled', b'0', '2020-02-22 19:58:53', 'c@test.com'),
-(4, 2, 'Maven', b'1', '2020-02-23 13:14:53', 'maven@test.com'),
-(5, 2, 'Jog', b'1', '2020-02-23 13:19:17', 'jog@test.com'),
-(6, 2, 'Sphegatti', b'0', '2020-02-23 13:21:15', 'Sphegatti@test.com'),
-(7, 2, 'Destine', b'0', '2020-02-23 13:23:09', 'destine@test.com'),
-(8, 2, 'Remem', b'1', '2020-02-23 13:24:29', 'remen@test.com'),
-(9, 1, 'Keith', b'1', '2020-02-23 13:25:38', 'keith@test.com'),
-(18, 2, 'Faith', b'0', '2020-02-23 18:30:22', 'faith@test.com'),
-(19, 2, 'Clum', b'1', '2020-02-23 18:31:02', 'clum@test.com');
+INSERT INTO `Users` (`id`, `role_id`, `name`, `active`, `created_time`, `email`, `password`) VALUES
+(1, 1, 'admin', b'1', '2020-02-22 19:57:14', 'a@test.com', 'admin'),
+(2, 2, 'Raymon', b'1', '2020-02-22 19:58:35', 'b@test.com', NULL),
+(3, 2, 'disabled', b'0', '2020-02-22 19:58:53', 'c@test.com', 'inactive'),
+(4, 2, 'Maven', b'1', '2020-02-23 13:14:53', 'maven@test.com', 'mavvv1'),
+(5, 2, 'Jog', b'1', '2020-02-23 13:19:17', 'jog@test.com', NULL),
+(6, 2, 'Sphegatti', b'0', '2020-02-23 13:21:15', 'Sphegatti@test.com', NULL),
+(7, 2, 'Destine', b'0', '2020-02-23 13:23:09', 'destine@test.com', NULL),
+(8, 2, 'Remem', b'1', '2020-02-23 13:24:29', 'remen@test.com', NULL),
+(9, 1, 'Keith', b'1', '2020-02-23 13:25:38', 'keith@test.com', NULL),
+(18, 2, 'Faith', b'0', '2020-02-23 18:30:22', 'faith@test.com', NULL),
+(19, 2, 'Clum', b'1', '2020-02-23 18:31:02', 'clum@test.com', NULL);
 
 --
 -- Indexes for dumped tables
@@ -230,7 +231,7 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- Constraints for dumped tables
