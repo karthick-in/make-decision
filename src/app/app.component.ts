@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ApiService } from './api.service'
+import { ApiService } from './api.service';
+import { Util } from './util';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,8 @@ import { ApiService } from './api.service'
 export class AppComponent {
   title = 'MakeDecisionApp';
 
-  constructor(public apiservice : ApiService){
+  constructor(public apiservice : ApiService,
+    public util : Util){
 
   }
 

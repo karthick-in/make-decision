@@ -30,12 +30,15 @@ export class LoginComponent implements OnInit {
       if(res.user.active.data[0] !== 1){  // to check if the user is active
         this.util.errMsg = "You're not an active user, please contact administrator!";
       }else{
-        localStorage.setItem('token', res.user.token);
+        localStorage.clear();
+        this.util.storeUser(res as User)        
+        //this.util.setSecuredToken(res.user.token);
         this.router.navigate(['/home']);        
       }      
     },
       err => {
         this.util.errMsg = "Wrong Username or Password";
+        this.loginUser.password = null;
       });
   }
 

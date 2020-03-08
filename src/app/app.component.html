@@ -8,12 +8,13 @@
     <a routerLink="/register" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-md"
       *ngIf="!this.apiservice.loggedIn()" href="#" role="button">Register</a>
 
-    <div class="text-right"> 
+    <div class="text-right">
 
-      <a routerLink="/login" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-md"
-      href="#" role="button">Admin panel</a>
+      <a routerLink="" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-md"
+      *ngIf="util.isAdminRole()" href="#" role="button">Admin panel</a>
 
-      <button *ngIf="this.apiservice.loggedIn()" (click)="this.apiservice.logoutUser()">Logout</button>
+      <button *ngIf="this.apiservice.loggedIn()" (click)="this.apiservice.logoutUser()"
+      class="btn btn-primary btn-md">Logout</button>
     </div>
 
   </div>

@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
       if (this._apiservice.loggedIn()) {
         return true
       } else {
-        console.log('false')            
+        console.log('Authguard failed')            
         this._router.navigate(['/login'])
         return false
       }

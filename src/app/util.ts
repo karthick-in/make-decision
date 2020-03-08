@@ -5,6 +5,8 @@ export class Util {
 
     errMsg = "";
     secretKey = "uierQsg";
+    currentUser : any;
+    currentToken : any;
 
     constructor() { }
 
@@ -19,7 +21,28 @@ export class Util {
     resetValues(clearUser : User) : User{
         this.errMsg = "";
         clearUser = {} as User;
+        this.currentUser = {};
         return clearUser;
     }    
+
+    storeUser(newuser){                
+        this.currentUser = newuser;
+        this.currentToken = this.encrypt('token');
+        localStorage.setItem(this.currentToken, newuser.user.token);
+        console.log("Stored user value : "+this.currentUser)
+    }
+
+    removeUser(){
+        this.currentUser = {};
+        this.currentToken = null;
+    }
+
+    isAdminRole() : boolean{
+        return (this?.currentUser?.user?.role_id === 1)
+    }
+
+    getSecuredToken(){
+        return this.currentToken
+    }   
 
 }

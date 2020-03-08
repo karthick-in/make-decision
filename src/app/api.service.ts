@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Util } from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private util : Util
   ) { }
 
   loginUser(user) {
@@ -26,16 +28,16 @@ export class ApiService {
 
   logoutUser() {
     localStorage.clear();
+    this.util.removeUser();
     this.router.navigate(['/login'])
   }
 
-  getToken() {
-    let token = localStorage.getItem('token');
-    return token;
+  getToken() { 
+    return localStorage.getItem(this.util.getSecuredToken());
   }
 
-  loggedIn() : boolean{
-    return !!localStorage.getItem('token');
+  loggedIn() : boolean{    
+    return !!this.getToken();
   }
 
   // Use this function to find whether the current user is a verified token user...
