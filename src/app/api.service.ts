@@ -33,7 +33,7 @@ export class ApiService {
   }
 
   getToken() { 
-    return localStorage.getItem(this.util.getSecuredToken());
+    return this.util.getSecuredToken();
   }
 
   loggedIn() : boolean{    

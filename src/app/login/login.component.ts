@@ -31,8 +31,7 @@ export class LoginComponent implements OnInit {
         this.util.errMsg = "You're not an active user, please contact administrator!";
       }else{
         localStorage.clear();
-        this.util.storeUser(res as User)        
-        //this.util.setSecuredToken(res.user.token);
+        this.util.storeUser(res)        
         this.router.navigate(['/home']);        
       }      
     },
