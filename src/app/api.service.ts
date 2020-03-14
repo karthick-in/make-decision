@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Util } from './util';
 
 @Injectable({
@@ -14,7 +13,6 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
     private util : Util
   ) { }
 
@@ -27,9 +25,7 @@ export class ApiService {
   }
 
   logoutUser() {
-    localStorage.clear();
     this.util.removeUser();
-    this.router.navigate(['/login'])
   }
 
   getToken() { 
