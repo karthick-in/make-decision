@@ -1,7 +1,7 @@
 import * as CryptoJS from 'crypto-js';
 import { User } from './user';
-import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Injectable, ChangeDetectorRef } from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +15,7 @@ export class Util {
 
     constructor(
         private router: Router
+        //private _changeDetect : ChangeDetectorRef
     ) { }
 
     encrypt(value: string): string {
@@ -32,12 +33,20 @@ export class Util {
 
     storeUser(newuser) {
         localStorage.setItem(this.tokenStarter + this.encrypt('token'), newuser.user.token)
-        localStorage.setItem(`${this.userDetailStarter}${this.encrypt('usr')}`, this.encrypt(JSON.stringify(newuser)));
+        localStorage.setItem(this.userDetailStarter + this.encrypt('usr'), this.encrypt(JSON.stringify(newuser)));
     }
 
     retrieveUser() {
-        var _getUsrValue = this.getSecuredValues(this.userDetailStarter, 'usr');
-        return !!_getUsrValue ? JSON.parse(this.decrypt(_getUsrValue)) : null
+        try {
+            var _getUsrValue = this.getSecuredValues(this.userDetailStarter, 'usr');
+            //this._changeDetect.detectChanges();
+            return !!_getUsrValue ? JSON.parse(this.decrypt(_getUsrValue)) : null
+            
+        } catch (error) {
+            console.log("Err: " + error);
+            this.removeUser();                        
+        }
+        
     }
 
     removeUser() {
@@ -51,29 +60,15 @@ export class Util {
     }
 
     getSecuredToken() {
-        try {
-            var values = Object.keys(localStorage).filter((key) => key.startsWith(this.tokenStarter)).map((key) => localStorage[key]);
-            if (values[0] != null) {
-                var wholekeys = Object.keys(localStorage).filter((key) => key.startsWith(this.tokenStarter));
-                return (this.decrypt(wholekeys[0]?.replace(this.tokenStarter, '')) == 'token') ? values[0] : false;
-            }
-            return false;
-
-        } catch (error) {
-            console.log("Err: " + error);
-            this.removeUser();
-        }
-
+        return this.getSecuredValues(this.tokenStarter, 'token');
     }
 
     getSecuredValues(_starter: any, _actualString: string): any {
         try {
             var values = Object.keys(localStorage).filter((key) => key.startsWith(_starter)).map((key) => localStorage[key]);
             if (values[0] != null) {
-                console.log('value :' + values[0]);
-
                 var wholekeys = Object.keys(localStorage).filter((key) => key.startsWith(_starter));
-                return (this.decrypt(wholekeys[0]?.replace(_starter, '')) == _actualString) ? values[0] : false;
+                return (this.decrypt(wholekeys[0]?.replace(_starter, '')) == _actualString) ? values[0] : this.removeUser();
             }
             return false;
 
