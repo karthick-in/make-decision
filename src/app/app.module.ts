@@ -12,7 +12,10 @@ import { ApiService } from './api.service';
 import { Util } from './util';
 import { HomeComponent } from './home/home.component';
 import { TokeninterceptorService } from './tokeninterceptor.service';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AdminpanelComponent } from './adminpanel/adminpanel.component';
+import { NewquestionComponent } from './newquestion/newquestion.component';
+import { QuestionviewComponent } from './questionview/questionview.component'
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    AdminpanelComponent,
+    NewquestionComponent,
+    QuestionviewComponent
   ],
   imports: [
     BrowserModule,

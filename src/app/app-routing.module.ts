@@ -5,12 +5,15 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AuthGuard } from './auth.guard';
+import { AdminpanelComponent } from './adminpanel/adminpanel.component';
+import { NewquestionComponent } from './newquestion/newquestion.component';
+import { QuestionviewComponent } from './questionview/questionview.component';
 
 
 const routes: Routes = [
   {
     path : '' ,
-    redirectTo: '/register',
+    redirectTo: '/login',
     pathMatch: "full"
   },
   {
@@ -25,6 +28,28 @@ const routes: Routes = [
     path : 'home',
     canActivate : [AuthGuard],
     component : HomeComponent
+  },
+  {
+    path : 'adminpanel',
+    canActivate : [AuthGuard],
+    component : AdminpanelComponent,
+    /* children : [
+      {
+        path : 'newquestion',
+        canActivate : [AuthGuard],
+        component : NewquestionComponent
+
+      }
+    ] */
+  },
+  {
+    path : 'adminpanel/newquestion',
+    canActivate : [AuthGuard],
+    component : NewquestionComponent
+  },
+  {
+    path: 'questionview',
+    component: QuestionviewComponent
   },
   {
     path: '**',
