@@ -24,7 +24,7 @@
             <div class="form-group">
               <label>Password</label>
               <input type="password" class="form-control rounded-0" name="password" [(ngModel)]="loginUser.password"
-                required>
+                placeholder="******" required>
             </div>
             <button type="button" [disabled]="loginForm.form.invalid" (click)="login()"
               class="btn btn-success float-right">Login</button>

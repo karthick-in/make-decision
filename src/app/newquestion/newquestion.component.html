@@ -1,11 +1,39 @@
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a routerLink="/adminpanel" class="nav-link" href="#">Reports</a>
-    </li>
-    <li class="nav-item">
-        <a routerLink="/adminpanel/newquestion" routerLinkActive="active" class="nav-link active" href="#">New
-            Question</a>
-    </li>
-</ul>
-<br>
-<p>newquestion works!</p>
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a routerLink="/adminpanel" class="nav-link" href="#">Reports</a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/adminpanel/newquestion" routerLinkActive="active" class="nav-link active" href="#">New
+                Question</a>
+        </li>
+    </ul>
+    <br>
+
+    <table class="table table-striped">
+        <caption style="caption-side: top;">Existing Questions</caption>
+        <thead class="thead-dark">
+          <tr>
+            <th>S.#</th>
+            <th>Question</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Answer type</th>
+            <th>Created Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let question of _questions; index as i">
+            <td>{{ i+1 }}</td>
+            <td>{{ question.question }}</td>
+            <td>{{ question.from}}</td>
+            <td>{{ question.to }}</td>
+            <td>{{ question.answer_type }}</td>
+            <td>{{ question.created_time }}</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
+
+
+

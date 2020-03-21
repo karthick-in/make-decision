@@ -2,6 +2,7 @@ import * as CryptoJS from 'crypto-js';
 import { User } from './user';
 import { Router } from '@angular/router';
 import { Injectable, ChangeDetectorRef } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -81,6 +82,15 @@ export class Util {
             this.logoutUser();
         }
 
+    }
+
+    logoutIf401Error(err) {
+        if (err instanceof HttpErrorResponse) {
+            if (err.status === 401) { // unauthorized user
+                console.log("Unauthorized user buddy!");
+                this.logoutUser();
+            }
+        }
     }
 
 }

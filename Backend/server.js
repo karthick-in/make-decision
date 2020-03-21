@@ -116,6 +116,27 @@ app.get('/verifytoken', verifyToken, (req, res) => {
   res.status(200).end();
 });
 
+//Get all questions...
+app.get('/getquestions', verifyToken, (req, res) => {
+  connection.query('select * from Question', (error, results, fields) => {
+    if (error){
+      console.error("Some error occurred");
+      res.status(401).send();
+    }else
+      res.end(JSON.stringify(results));
+  });
+});
+
+app.get('/answertype', verifyToken, (req, res) => {
+  connection.query('select * from Answer_type', (error, results, fields) => {
+    if (error){
+      console.error("Some error occurred");
+      res.status(401).send();
+    }else
+      res.end(JSON.stringify(results));
+  });
+});
+
 app.get('*', (req, res) => {
   console.log("Unknown page request just made")
   res.sendStatus(404).end("Page not found!");
