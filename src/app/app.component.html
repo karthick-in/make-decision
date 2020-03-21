@@ -4,12 +4,12 @@
     <p class="lead">Decide what you want from the higher officials...</p>
     <hr class="my-4">
     <a routerLink="/login" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-md"
-      *ngIf="!this.apiservice.loggedIn()" href="#" role="button">Login</a>
+      *ngIf="!this.util.loggedIn()" href="#" role="button">Login</a>
     <a routerLink="/register" routerLinkActive="active" style="margin-right:10px" class="btn btn-primary btn-md"
-      *ngIf="!this.apiservice.loggedIn()" href="#" role="button">Register</a>
+      *ngIf="!this.util.loggedIn()" href="#" role="button">Register</a>
     <br>
 
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark rounded" *ngIf="apiservice.loggedIn()">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark rounded" *ngIf="util.loggedIn()">
       <a routerLink="/home" class="nav-link navbar-brand" href="#">Decide</a>
       <!-- Links -->
       <ul class="navbar-nav">
@@ -21,7 +21,7 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-        <li><button *ngIf="this.apiservice.loggedIn()" (click)="this.apiservice.logoutUser()"
+        <li><button *ngIf="this.util.loggedIn()" (click)="this.util.logoutUser()"
             class="btn btn-danger btn-md">Logout</button></li>
       </ul>
 

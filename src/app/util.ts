@@ -26,6 +26,15 @@ export class Util {
         return CryptoJS.AES.decrypt(textToDecrypt, this.secretKey.trim()).toString(CryptoJS.enc.Utf8);
     }
 
+    logoutUser() {
+        localStorage.clear();
+        this.router.navigate(['/login']);
+    }
+
+    loggedIn(): boolean {
+        return !!this.getSecuredToken();
+    }
+
     resetValues(clearUser: User): User {
         this.errMsg = "";
         return clearUser = {} as User;
@@ -44,14 +53,9 @@ export class Util {
             
         } catch (error) {
             console.log("Err: " + error);
-            this.removeUser();                        
+            this.logoutUser();                        
         }
         
-    }
-
-    removeUser() {
-        localStorage.clear();
-        this.router.navigate(['/login']);
     }
 
     isAdminRole(): boolean {
@@ -68,13 +72,13 @@ export class Util {
             var values = Object.keys(localStorage).filter((key) => key.startsWith(_starter)).map((key) => localStorage[key]);
             if (values[0] != null) {
                 var wholekeys = Object.keys(localStorage).filter((key) => key.startsWith(_starter));
-                return (this.decrypt(wholekeys[0]?.replace(_starter, '')) == _actualString) ? values[0] : this.removeUser();
+                return (this.decrypt(wholekeys[0]?.replace(_starter, '')) == _actualString) ? values[0] : this.logoutUser();
             }
             return false;
 
         } catch (error) {
             console.log("Err : " + error);
-            this.removeUser();
+            this.logoutUser();
         }
 
     }

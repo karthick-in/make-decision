@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     
-      if (this._apiservice.loggedIn()) {
+      if (this.util.loggedIn()) {
         if(state.url.toString().includes('admin')){ // only admin users can have access here...
           if(this.util.isAdminRole()){
             return true;

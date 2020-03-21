@@ -22,19 +22,7 @@ export class ApiService {
 
   registerUser(user) {
     return this.http.post<any>(this._registerUrl, user)
-  }
-
-  logoutUser() {
-    this.util.removeUser();
-  }
-
-  getToken() { 
-    return this.util.getSecuredToken();
-  }
-
-  loggedIn() : boolean{    
-    return !!this.getToken();
-  }
+  }  
 
   // Use this function to find whether the current user is a verified token user...
   isVerifiedLogin(){
@@ -43,7 +31,7 @@ export class ApiService {
       err => {
         if( err instanceof HttpErrorResponse ) {
           if (err.status === 401) { // unauthorized user
-            this.logoutUser();     
+            this.util.logoutUser();     
           }
         }
       }

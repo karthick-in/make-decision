@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpInterceptor } from '@angular/common/http'
-import { ApiService } from './api.service';
+import { Util } from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +10,10 @@ export class TokeninterceptorService {
   constructor(private injector: Injector) { }
 
   intercept(req, next) {
-    let apiservice = this.injector.get(ApiService)
+    let util = this.injector.get(Util)
     let tokenizedReq = req.clone(
       {
-        headers: req.headers.set('Authorization', 'bearer ' + apiservice.getToken())
+        headers: req.headers.set('Authorization', 'bearer ' + util.getSecuredToken())
       }
     )
     return next.handle(tokenizedReq)

@@ -10,8 +10,7 @@ import { Util } from './util';
 export class AppComponent {
   title = 'MakeDecisionApp';
 
-  constructor(public apiservice : ApiService,
-    public util : Util){
+  constructor(public util : Util){
 
   }
 
