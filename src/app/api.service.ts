@@ -25,20 +25,18 @@ export class ApiService {
   }  
 
   // Use this function to find whether the current user is a verified token user...
-  isVerifiedLogin(){
-    this.verifyToken().subscribe(
-      res => console.log("verified"),
+  async isVerifiedLogin() {
+    return await this.http.get(this._verifyTokenUrl).toPromise().then(
+      success => console.log("Verified"),
       err => {
-        if( err instanceof HttpErrorResponse ) {
+        if (err instanceof HttpErrorResponse) {
           if (err.status === 401) { // unauthorized user
-            this.util.logoutUser();     
+            console.log("Unauthorized user buddy!");
+            this.util.logoutUser();
           }
         }
       }
-    )
+    );
   }
 
-  verifyToken(){
-    return this.http.get<any>(this._verifyTokenUrl);
-  }
 }

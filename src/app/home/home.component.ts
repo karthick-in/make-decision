@@ -18,10 +18,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {    
   }
 
-  // TODO: remove this function
-  verify_the_token(){
-    this.apiservice.isVerifiedLogin();
-    console.log("Hi youre a true user");
+  async verify_the_token(){
+    await this.apiservice.isVerifiedLogin();    
   }
 
 }
