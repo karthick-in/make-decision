@@ -28,7 +28,7 @@
             <td>{{ question.question }}</td>
             <td>{{ question.from}}</td>
             <td>{{ question.to }}</td>
-            <td>{{ question.answer_type }}</td>
+            <td>{{ this.getFilteredAnswertype(question.answer_type) }}</td>
             <td>{{ question.created_time }}</td>
           </tr>
         </tbody>

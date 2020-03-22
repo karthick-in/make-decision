@@ -17,11 +17,9 @@ export class NewquestionComponent implements OnInit {
     public _util : Util
   ) { }
 
-  ngOnInit(): void {
-    this.loadQuestions();
-    this._questions.forEach(element => {
-      this.getAnswerType(element.answer_type)      
-    });      
+  async ngOnInit() {
+    await this.loadQuestions();
+    await this.getAnswerType();
   }
 
   async loadQuestions(){
@@ -36,8 +34,8 @@ export class NewquestionComponent implements OnInit {
     )
   }
 
-  getAnswerType(answertypeID){
-    this._apiService.getAnswerType().then(
+  async getAnswerType(){
+    await this._apiService.getAnswerType().then(
       atypes => {
         this._answer_types = atypes;        
       },
@@ -45,13 +43,12 @@ export class NewquestionComponent implements OnInit {
         console.log("Some error occurred!");
         this._util.logoutIf401Error(err);
       }
-    )
+    )    
+  }
 
+  getFilteredAnswertype(answertypeID){
     if(this._answer_types != null){
-      let map = new Map(this._answer_types);
-      console.log(map);
-      console.log(map.get(answertypeID));
-      return map.get(answertypeID);
+      return this._answer_types.filter(a => (a.id == answertypeID))[0].answer_type;      
     }
     return "err";
   }
