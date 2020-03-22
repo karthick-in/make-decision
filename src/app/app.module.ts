@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AuthGuard } from './auth.guard';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,7 +16,8 @@ import { TokeninterceptorService } from './tokeninterceptor.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AdminpanelComponent } from './adminpanel/adminpanel.component';
 import { NewquestionComponent } from './newquestion/newquestion.component';
-import { QuestionviewComponent } from './questionview/questionview.component'
+import { QuestionviewComponent } from './questionview/questionview.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { QuestionviewComponent } from './questionview/questionview.component'
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    BsDatepickerModule.forRoot(),
   ],
   providers: [ApiService,Util,AuthGuard,
     {

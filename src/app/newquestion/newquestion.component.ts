@@ -11,6 +11,8 @@ export class NewquestionComponent implements OnInit {
 
   _questions;
   _answer_types;
+  _fromdate;
+  _form;
   
   constructor(
     public _apiService : ApiService,
@@ -30,8 +32,13 @@ export class NewquestionComponent implements OnInit {
       err =>{
         console.log("Some error occurred!");
         this._util.logoutIf401Error(err);
-      }
+      }      
     )
+    this._questions.forEach(element => {
+      let fromdate = element.from;
+      let date: Date = new Date(fromdate);  
+      console.log("Date = " + date.toDateString());
+    });
   }
 
   async getAnswerType(){
@@ -51,6 +58,16 @@ export class NewquestionComponent implements OnInit {
       return this._answer_types.filter(a => (a.id == answertypeID))[0].answer_type;      
     }
     return "err";
+  }
+
+  isPastDate(date){
+    let checkdate = new Date(date);   
+    let currentdate = new Date();
+    if(checkdate.toDateString() == currentdate.toDateString()){
+      return false;
+    }
+        
+    return checkdate < currentdate;
   }
 
 }

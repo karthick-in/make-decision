@@ -10,6 +10,63 @@
     </ul>
     <br>
 
+
+    <!-- New questions form -->
+
+    <div class="card rounded-0">
+      <div class="card-header">
+        <h3 class="mb-0">Create a New Question</h3>
+      </div>
+      <div class="card-body">
+        <form class="form" ngNativeValidate>
+
+          <div class="form-group">
+            <label>Question</label>
+            <textarea class="form-control"rows="3" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Question type</label>
+            <select class="form-control">
+              <option *ngFor="let qtype of _answer_types" [value]="qtype">{{ qtype.answer_type }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>From</label>
+            <input class="form-control" type="text" name="fromdate" required
+            [(ngModel)]="_fromdate" #fromdate="ngModel" bsDaterangepicker>
+            
+            <div *ngIf="isPastDate(_fromdate)" class="alert alert-danger">
+              From date cannot be in past
+            </div>
+          </div>
+
+          <!-- <div *ngIf="fromdate.invalid && (fromdate.dirty || fromdate.touched)" class="alert alert-danger">
+          
+            <div *ngIf="fromdate.errors.required">
+              From date is required.
+            </div>
+            <div *ngIf="isPastDate(_fromdate)">
+              From date cannot be in past
+            </div>
+          
+          </div> -->
+
+          <div class="form-group">
+            <label>To</label>
+            <input class="form-control" type="date" required>
+          </div>
+
+          <button class="btn btn-success">Load Question</button>
+        </form> 
+      </div>
+    </div>
+
+    <br>
+    <hr>
+
+    <!-- Existing question display table -->
     <table class="table table-striped">
         <caption style="caption-side: top;">Existing Questions</caption>
         <thead class="thead-dark">
@@ -18,7 +75,7 @@
             <th>Question</th>
             <th>From</th>
             <th>To</th>
-            <th>Answer type</th>
+            <th>Question type</th>
             <th>Created Time</th>
           </tr>
         </thead>
