@@ -11,8 +11,12 @@ export class NewquestionComponent implements OnInit {
 
   _questions;
   _answer_types;
-  _fromdate;
+  
+  //Form usages...
   _form;
+  _question;
+  _question_type;
+  _daterange;
   
   constructor(
     public _apiService : ApiService,
@@ -68,6 +72,14 @@ export class NewquestionComponent implements OnInit {
     }
         
     return checkdate < currentdate;
+  }
+
+  createQuestion(formdata){
+    console.log('formdata '+this._question)
+    console.log('formdata '+this._daterange)
+    console.log('formdata '+this._question_type)
+    console.log('formdata '+this._form)
+
   }
 
 }

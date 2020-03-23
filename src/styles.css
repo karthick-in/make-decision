@@ -2,3 +2,9 @@
 body {
     font-family: "Alegreya", Times, serif;    
   }
+
+/* To add required * (asterik) in forms */
+.form-group.required .control-label:after {
+    content:"*";
+    color:red;
+  }

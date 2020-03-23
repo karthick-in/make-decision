@@ -10,19 +10,19 @@
           <h3 class="mb-0">Login</h3>
         </div>
         <div class="card-body">
-          <form class="form was-validated" ngNativeValidate #loginForm="ngForm">
-            <div class="form-group">
-              <label for="uname1">Username</label>
+          <form class="form" ngNativeValidate #loginForm="ngForm" [class.was-validated]="loginForm.touched && loginForm.invalid">
+            <div class="form-group required">
+              <label for="uname1" class="control-label">Username</label>
               <input type="email" class="form-control rounded-0" name="email" ng-model="text"
                 [(ngModel)]="loginUser.email" #email="ngModel" required email placeholder="Email @">
             </div>
 
-            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
+            <div *ngIf="email.invalid && email.touched" class="alert alert-danger">
               Email format required
             </div>
 
-            <div class="form-group">
-              <label>Password</label>
+            <div class="form-group required">
+              <label class="control-label">Password</label>
               <input type="password" class="form-control rounded-0" name="password" [(ngModel)]="loginUser.password"
                 placeholder="******" required>
             </div>
