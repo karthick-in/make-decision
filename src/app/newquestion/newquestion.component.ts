@@ -39,9 +39,9 @@ export class NewquestionComponent implements OnInit {
       }      
     )
     this._questions.forEach(element => {
-      let fromdate = element.from;
-      let date: Date = new Date(fromdate);  
-      console.log("Date = " + date.toDateString());
+      element.from = new Date(element.from).toDateString();
+      element.to = new Date(element.to).toDateString();
+      element.created_time = new Date(element.created_time).toDateString();
     });
   }
 
@@ -64,14 +64,18 @@ export class NewquestionComponent implements OnInit {
     return "err";
   }
 
-  isPastDate(date){
-    let checkdate = new Date(date);   
-    let currentdate = new Date();
-    if(checkdate.toDateString() == currentdate.toDateString()){
-      return false;
+  isPastDate(daterange) {
+    if (daterange != null) {
+      let checkdate = new Date(daterange[0]);
+      let currentdate = new Date();
+      if (checkdate.toDateString() == currentdate.toDateString()) {
+        return false;
+      }
+
+      return checkdate < currentdate;
+
     }
-        
-    return checkdate < currentdate;
+
   }
 
   createQuestion(formdata){
