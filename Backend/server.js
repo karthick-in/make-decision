@@ -8,6 +8,7 @@ const cryptojs = require('crypto-js');
 
 const tokenSecretKey = "zzkeyzER";
 const decryptSecretKey = "uierQsg";
+const portNumber = 3000;
 
 var connection = mysql.createConnection({
   host: 'localhost',
@@ -30,10 +31,14 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 app.use(cors());
 
-var server = app.listen(3000, "127.0.0.1", function () {
+var server = app.listen(portNumber, "127.0.0.1", function () {
   var host = server.address().address
   var port = server.address().port
   console.log("Example app listening at http://%s:%s", host, port)
+}).on('error', function (err) {
+  if (err.errno == 'EADDRINUSE') {
+    console.error(`Port ${portNumber} busy`);
+  }
 });
 
 app.get('/users', function (req, res) {
@@ -63,9 +68,27 @@ app.post('/register', function (req, res) {
       res.sendStatus(400).end("Duplicate entry")
     }
     else
+      res.end();
+  });
+});
+
+app.post('/insertquestion', verifyToken, (req, res) => {
+  let question = req.body;
+  console.log(question);
+  console.log(getMysqlDateFormat(new Date(question.from)));
+  connection.query(`insert into Question values(NULL,'${question.question}','${getMysqlDateFormat(new Date(question.from))}','${getMysqlDateFormat(new Date(question.to))}',${question.answer_type},now())`, function (error, results, fields) {
+    if (error) {
+      console.error(`Error occurred ` + error)
+      res.sendStatus(400).end("Error")
+    }
+    else
       res.sendStatus(200).end();
   });
 });
+
+function getMysqlDateFormat(date) {
+  return date.toISOString().slice(0, 19).replace('T', ' ');
+}
 
 // Login user
 app.post('/login', function (req, res) {
@@ -89,10 +112,10 @@ app.post('/login', function (req, res) {
   });
 });
 
-function customizeResult(values, token){
+function customizeResult(values, token) {
   delete values['password'];
   values['token'] = token;
-  return values;  
+  return values;
 }
 
 
@@ -119,20 +142,20 @@ app.get('/verifytoken', verifyToken, (req, res) => {
 //Get all questions...
 app.get('/getquestions', verifyToken, (req, res) => {
   connection.query('select * from Question', (error, results, fields) => {
-    if (error){
+    if (error) {
       console.error("Some error occurred");
       res.status(401).send();
-    }else
+    } else
       res.end(JSON.stringify(results));
   });
 });
 
 app.get('/answertype', verifyToken, (req, res) => {
   connection.query('select * from Answer_type', (error, results, fields) => {
-    if (error){
+    if (error) {
       console.error("Some error occurred");
       res.status(401).send();
-    }else
+    } else
       res.end(JSON.stringify(results));
   });
 });
@@ -147,21 +170,21 @@ function decrypt(encryptedText) {
 }
 
 function verifyToken(req, res, next) {
-  if(!req.headers.authorization) {
+  if (!req.headers.authorization) {
     return res.status(401).send('Unauthorized request')
   }
   let token = req.headers.authorization.split(' ')[1]
-  if(token === 'null') {
-    return res.status(401).send('Unauthorized request')    
+  if (token === 'null') {
+    return res.status(401).send('Unauthorized request')
   }
   try {
-    var payload = jwt.verify(token, tokenSecretKey)    
+    var payload = jwt.verify(token, tokenSecretKey)
   } catch (error) {
     return res.status(401).end();
   }
-  
-  if(!payload) {
-    return res.status(401).send('Unauthorized request')    
+
+  if (!payload) {
+    return res.status(401).send('Unauthorized request')
   }
   req.userId = payload.subject
   next()

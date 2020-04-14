@@ -12,10 +12,11 @@ export class ApiService {
   private readonly _verifyTokenUrl = "http://localhost:3000/verifyToken";
   private readonly _getQuestionsUrl = "http://localhost:3000/getQuestions";
   private readonly _answerTypeUrl = "http://localhost:3000/answertype";
+  private readonly _insertQuestionUrl = "http://localhost:3000/insertquestion";
 
   constructor(
     private http: HttpClient,
-    private util : Util
+    private util: Util
   ) { }
 
   loginUser(user) {
@@ -25,7 +26,7 @@ export class ApiService {
   registerUser(user) {
     return this.http.post<any>(this._registerUrl, user)
   }
-  
+
   async getQuestions() {
     return await this.http.get(this._getQuestionsUrl).toPromise();
   }
@@ -34,13 +35,27 @@ export class ApiService {
     return await this.http.get(this._answerTypeUrl).toPromise();
   }
 
+  async insertQuestion(question: any) {
+    try {
+      return await this.http.post<any>(this._insertQuestionUrl, question).toPromise();
+    } catch (error) {
+      this.util.logoutIf401Error(error);
+      if (error?.status == 200) {
+        console.log('Question added');
+      }
+      else
+        console.log('Some error occured!');
+    }
+
+  }
+
   // Use this function to find whether the current user is a verified token user...
   async isVerifiedLogin() {
     return await this.http.get(this._verifyTokenUrl).toPromise().then(
       success => console.log("Verified"),
       err => {
-        this.util.logoutIf401Error(err);      
-       }
+        this.util.logoutIf401Error(err);
+      }
     );
   }
 

@@ -18,6 +18,7 @@ import { AdminpanelComponent } from './adminpanel/adminpanel.component';
 import { NewquestionComponent } from './newquestion/newquestion.component';
 import { QuestionviewComponent } from './questionview/questionview.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     PageNotFoundComponent,
     AdminpanelComponent,
     NewquestionComponent,
-    QuestionviewComponent
+    QuestionviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,6 +38,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     HttpClientModule,
     BrowserAnimationsModule,
     BsDatepickerModule.forRoot(),
+    TimepickerModule.forRoot()
   ],
   providers: [ApiService,Util,AuthGuard,
     {

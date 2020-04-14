@@ -5,31 +5,40 @@
       <span class="anchor" id="formLogin"></span>
 
       <!-- form card login -->
-      <div class="card rounded-0">
+      <div class="card w-55">
         <div class="card-header">
           <h3 class="mb-0">Login</h3>
         </div>
         <div class="card-body">
-          <form class="form" ngNativeValidate #loginForm="ngForm" [class.was-validated]="loginForm.touched && loginForm.invalid">
+          <form class="form" ngNativeValidate #loginForm="ngForm"
+            [class.was-validated]="loginForm.touched && loginForm.invalid">
             <div class="form-group required">
               <label for="uname1" class="control-label">Username</label>
-              <input type="email" class="form-control rounded-0" name="email" ng-model="text"
-                [(ngModel)]="loginUser.email" #email="ngModel" required email placeholder="Email @">
-            </div>
+              <input type="email" class="form-control" required email name="email" ng-model="text"
+                [(ngModel)]="loginUser.email" #email="ngModel" placeholder="Email @">
 
-            <div *ngIf="email.invalid && email.touched" class="alert alert-danger">
-              Email format required
+              <div *ngIf="email.errors?.required" class="invalid-feedback">
+                Please fill out this field!
+              </div>
+
+              <div *ngIf="email.errors?.email" class="invalid-feedback">
+                Email format required
+              </div>
             </div>
 
             <div class="form-group required">
               <label class="control-label">Password</label>
-              <input type="password" class="form-control rounded-0" name="password" [(ngModel)]="loginUser.password"
-                placeholder="******" required>
+              <input type="password" class="form-control" name="password" [(ngModel)]="loginUser.password"
+                placeholder="******" required #password="ngModel" [(ngModel)]="loginUser.password">
+
+              <div *ngIf="password.errors?.required" class="invalid-feedback">
+                Please fill out this field!
+              </div>
             </div>
             <button type="button" [disabled]="loginForm.form.invalid" (click)="login()"
               class="btn btn-success float-right">Login</button>
             <button type="reset" (click)="this.loginUser = this.util.resetValues(this.loginUser)"
-             style="margin-right:10px" class="btn btn-success float-right">Reset</button>
+              style="margin-right:10px" class="btn btn-success float-right">Reset</button>
           </form>
         </div>
         <!--/card-block-->

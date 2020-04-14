@@ -1,94 +1,112 @@
 <div class="container">
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a routerLink="/adminpanel" class="nav-link" href="#">Reports</a>
-        </li>
-        <li class="nav-item">
-            <a routerLink="/adminpanel/newquestion" routerLinkActive="active" class="nav-link active" href="#">New
-                Question</a>
-        </li>
-    </ul>
-    <br>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a routerLink="/adminpanel" class="nav-link" href="#">Reports</a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/adminpanel/newquestion" routerLinkActive="active" class="nav-link active" href="#">New
+        Question</a>
+    </li>
+  </ul>
+  <br>
 
 
-    <!-- New questions form -->
+  <!-- New questions form -->
 
-    <div class="card rounded-0">
-      <div class="card-header">
-        <h3 class="mb-0">Create a New Question</h3>
-      </div>
-      <div class="card-body">
-        <form class="form" ngNativeValidate [(ngModel)]="_form" #questionsForm="ngForm" name="_form" ngDefaultControl
-        [class.was-validated]="questionsForm.form.invalid && questionsForm.form.touched" 
+  <div class="card">
+    <div class="card-header">
+      <h3 class="mb-0">Create a New Question</h3>
+    </div>
+    <div class="card-body">
+
+      <form class="form" ngNativeValidate [(ngModel)]="_form" #questionsForm="ngForm" name="_form" ngDefaultControl
+        [class.was-validated]="questionsForm.form.invalid && questionsForm.form.touched"
         (ngSubmit)="createQuestion(questionsForm)">
 
-          <div class="form-group required" [class.was-validated]="question.touched && question.invalid">
-            <label class="control-label">Question</label>
-            <textarea class="form-control" rows="3" [(ngModel)]="_question" 
-            #question="ngModel" name="_question" required></textarea>
+        <div class="form-group required">
+          <label class="control-label">Question</label>
+          <textarea class="form-control" rows="3" [(ngModel)]="_question" #question="ngModel" name="_question"
+            required></textarea>
 
-            <div *ngIf="question.invalid && question.touched" class="invalid-feedback">Please fill out this field!</div>
+          <div *ngIf="question.errors?.required && question.touched" class="invalid-feedback">Please fill out this
+            field!</div>
 
-          </div>
+        </div>
 
-          <div class="form-group required">
-            <label class="control-label">Question type</label>
-            <select class="form-control" [(ngModel)]="_question_type" #questiontype="ngModel" name="_question_type" required> 
-              <option *ngFor="let qtype of _answer_types" [value]="qtype">{{ qtype.answer_type }}</option>
-            </select>
+        <div class="form-group required">
+          <label class="control-label">Question type</label>
+          <select class="form-control" [(ngModel)]="_question_type" #questiontype="ngModel" name="_question_type"
+            required>
+            <option *ngFor="let qtype of _answer_types" [value]="qtype.id">{{ qtype.answer_type }}</option>
+          </select>
 
-            <div *ngIf="questiontype.invalid && questiontype.touched" class="invalid-feedback">Please fill out this field!</div>
-          </div>
+          <div *ngIf="questiontype.errors?.required && questiontype.touched" class="invalid-feedback">Please fill out
+            this field!</div>
+        </div>
 
-          <div class="form-group required" [class.was-validated]="(daterange.touched && daterange.invalid) || isPastDate(_daterange)">
-            <label class="control-label">Date Range</label>
-            <input class="form-control" type="text" required
-            [(ngModel)]="_daterange" #daterange="ngModel" bsDaterangepicker name="_daterange">
-            
-            <div *ngIf="isPastDate(_daterange)" class="alert alert-danger">
-              From date cannot be in past
-            </div>
-            <div *ngIf="daterange.invalid && daterange.touched" class="invalid-feedback">Please fill out this field!</div>
-          </div>
+        <div class="form-group required">
+          <label class="control-label">Date Range</label>
+          <input class="form-control" type="text" required [(ngModel)]="_daterange" #daterange="ngModel"
+            bsDaterangepicker [minDate]="mindate" name="_daterange" (onHidden)="setMinTime(_daterange)">
 
-          <!-- Todo: Implement time pciker and Active field (non editable, sets value based on the date and time selected) -->
+          <div *ngIf="daterange.errors?.required && daterange.touched" class="invalid-feedback">Please fill out this
+            field!</div>
 
-          <input type="submit" class="btn btn-success" [disabled]="questionsForm.form.invalid" value="Load Question" 
+          <div *ngIf="daterange.errors?.bsDate?.invalid && daterange.touched" class="invalid-feedback">Please Select a
+            valid date from calender</div>
+        </div>
+
+        <!-- Make time as required field if any issue in time checking occurs when handling future date -->
+
+        <div class="form-group">
+          <label class="control-label">Want to set start time
+            <input type="checkbox" #needStartTime="ngModel" [(ngModel)]="_needStartTime" name="needStartTime"
+              title="Set start time if you wish to! otherwise current time will be loaded as default">
+          </label>
+          <timepicker #time="ngModel" [(ngModel)]="_time" name="time" [min]="minTime" formnovalidate="formnovalidate">
+          </timepicker>
+        </div>
+
+        <input type="submit" class="btn btn-success" [disabled]="questionsForm.form.invalid" value="Load Question"
           style="margin-right:15px">
-          <input type="reset" class="btn btn-success" value="Clear">
-        </form> 
+        <input type="reset" class="btn btn-success" value="Clear">
+      </form>
 
-      </div>
     </div>
+  </div>
 
-    <br>
-    <hr>
+  <br>
+  <hr>
 
-    <!-- Existing question display table -->
-    <table class="table table-striped">
-        <caption style="caption-side: top;">Existing Questions</caption>
-        <thead class="thead-dark">
-          <tr>
-            <th>S.#</th>
-            <th>Question</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Question type</th>
-            <th>Created Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let question of _questions; index as i">
-            <td>{{ i+1 }}</td>
-            <td>{{ question.question }}</td>
-            <td>{{ question.from}}</td>
-            <td>{{ question.to }}</td>
-            <td>{{ this.getFilteredAnswertype(question.answer_type) }}</td>
-            <td>{{ question.created_time }}</td>
-          </tr>
-        </tbody>
-      </table>
+  <button class="btn btn-primary" (click)="this.loadQuestions()">Refresh</button>
+
+  <!-- Existing question display table -->
+  <table class="table table-striped">
+    <caption style="caption-side: top;">Existing Questions</caption>
+    <thead class="thead-dark">
+      <tr>
+        <th>S.#</th>
+        <th>Question</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Question type</th>
+        <th>Created Time</th>
+        <th>Is Active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let question of _questions; index as i">
+        <td>{{ i+1 }}</td>
+        <td>{{ question.question }}</td>
+        <td>{{ question.from}}</td>
+        <td>{{ question.to }}</td>
+        <td>{{ this.getFilteredAnswertype(question.answer_type) }}</td>
+        <td>{{ question.created_time }}</td>
+        <td>
+          <div class="alert" [class.alert-success]="this.isActiveDate(question.from, question.to)"
+            [class.alert-danger]="!this.isActiveDate(question.from, question.to)"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-
-
-
