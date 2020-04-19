@@ -36,9 +36,9 @@ export class Util {
         return !!this.getSecuredToken();
     }
 
-    resetValues(clearUser: User): User {
+    resetValues(clearUser: any): any {
         this.errMsg = "";
-        return clearUser = {} as User;
+        return clearUser = {} as any;
     }
 
     storeUser(newuser) {

@@ -74,8 +74,8 @@ app.post('/register', function (req, res) {
 
 app.post('/insertquestion', verifyToken, (req, res) => {
   let question = req.body;
-  console.log(question);
-  console.log(getMysqlDateFormat(new Date(question.from)));
+  question.from += "UTC";
+  question.to += "UTC";
   connection.query(`insert into Question values(NULL,'${question.question}','${getMysqlDateFormat(new Date(question.from))}','${getMysqlDateFormat(new Date(question.to))}',${question.answer_type},now())`, function (error, results, fields) {
     if (error) {
       console.error(`Error occurred ` + error)
@@ -127,11 +127,16 @@ app.put('/customer', function (req, res) {
 });
 
 
-app.delete('/customer', function (req, res) {
-  console.log(req.body);
-  connection.query('DELETE FROM `customer` WHERE `Id`=?', [req.body.Id], function (error, results, fields) {
-    if (error) throw error;
-    res.end('Record has been deleted!');
+app.post('/deletequestion', verifyToken, (req, res) => {
+  let question = req.body;
+  res.sendStatus(200).end();
+  connection.query(`DELETE FROM Question WHERE id=${question.id}`, function (error, results, fields) {
+    if (error) {
+      console.error(`Error occurred ` + error)
+      res.sendStatus(400).end("Error")
+    }
+    else
+      res.status(200).end();
   });
 });
 

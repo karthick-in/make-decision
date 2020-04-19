@@ -1,9 +1,10 @@
 export class Question {
 
     question : string;
-    from : Date;
-    to : Date;
+    from : string;
+    to : string;
     answer_type : number;
     daterange : string;
+    time : string;
 
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Util } from '../util';
 import { Question } from '../question';
+import { NgForm } from '@angular/forms';
 
 
 @Component({
@@ -16,13 +17,12 @@ export class NewquestionComponent implements OnInit {
   mindate = new Date();
   minTime = new Date();
 
-  //Form usages...
-  _form;
-  _question;
-  _question_type;
-  _daterange;
-  _time;
-  _needStartTime;
+  _questionObj : Question = new Question;
+
+  hideTime : boolean = true;
+  msg = "";
+  TotalQuestionCount = 0;
+  ActiveQuestionCount = 0;
 
   constructor(
     public _apiService: ApiService,
@@ -48,6 +48,10 @@ export class NewquestionComponent implements OnInit {
       element.from = this.getFormattedDateString(new Date(element.from));
       element.to = this.getFormattedDateString(new Date(element.to));
       element.created_time = this.getFormattedDateString(new Date(element.created_time));
+      this.TotalQuestionCount++;
+      element.active = this.isActiveDate(element.from, element.to);
+      if(element.active)
+        this.ActiveQuestionCount++;
     });
 
     await this.getAnswerType();
@@ -72,21 +76,35 @@ export class NewquestionComponent implements OnInit {
     return "err";
   }
 
-  async createQuestion(formdata) {
-    var questionobj: Question = new Question();
-    questionobj.question = this._question;
-    questionobj.from = new Date(this._daterange[0]);
-    questionobj.to = new Date(this._daterange[1]);
-    questionobj.answer_type = this._question_type;
-    console.log(questionobj);
-    await this._apiService.insertQuestion(questionobj);
+  async createQuestion(form : NgForm) {
+    let _from = this.formatFromToTime(this._questionObj.time, this._questionObj.daterange[0]);
+    this._questionObj.from = new Date(_from).toString();
+    this._questionObj.to = new Date(this._questionObj.daterange[1]).toString();
+    console.log(this._questionObj);
+    await this._apiService.insertQuestion(this._questionObj);
+    this.msg = "Question added";
+    this.reset(form);
     await this.loadQuestions();
+  }
+
+  formatFromToTime(_time, _date) : string{
+
+    _time = new Date(_time);
+    _date = new Date(_date);
+
+    return `${_date.getMonth() + 1}/${_date.getDate()}/${_date.getFullYear()} ${_time.getHours()}:${_time.getMinutes()}`;
+    
+   
   }
 
   // Set min time only if from date is today
   setMinTime(daterange) {
+    
     if (daterange == null)
       return;
+
+    this.hideTime =false;
+    
     if (new Date(daterange[0]).toDateString() != new Date().toDateString()) {
       this.minTime = null;
     } else {
@@ -102,6 +120,23 @@ export class NewquestionComponent implements OnInit {
 
   isActiveDate(fromdate: any, todate: any): boolean {
     return (new Date() > new Date(fromdate) && new Date() < new Date(todate))
+  }
+
+  reset(form : NgForm){
+    form.resetForm();
+    this._questionObj = this._util.resetValues(this._questionObj);
+    this.hideTime = true;
+    setTimeout(()=>{
+      this.msg = "";
+    },3000)
+    
+  }
+
+  async deleteQuestion(id){
+    await this._apiService.deleteQuestion(JSON.parse(`{"id" : ${id}}`));
+    await this.loadQuestions();
+    alert("Question deleted");
+
   }
 
 }

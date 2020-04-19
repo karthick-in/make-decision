@@ -13,6 +13,7 @@ export class ApiService {
   private readonly _getQuestionsUrl = "http://localhost:3000/getQuestions";
   private readonly _answerTypeUrl = "http://localhost:3000/answertype";
   private readonly _insertQuestionUrl = "http://localhost:3000/insertquestion";
+  private readonly _deleteQuestionUrl = "http://localhost:3000/deletequestion";
 
   constructor(
     private http: HttpClient,
@@ -54,6 +55,16 @@ export class ApiService {
     return await this.http.get(this._verifyTokenUrl).toPromise().then(
       success => console.log("Verified"),
       err => {
+        this.util.logoutIf401Error(err);
+      }
+    );
+  }
+
+  async deleteQuestion(id : any){
+    console.log(id);
+    return await this.http.post<any>(this._deleteQuestionUrl, id).toPromise().then(
+      success => console.log("Question deleted"),
+      err =>{
         this.util.logoutIf401Error(err);
       }
     );

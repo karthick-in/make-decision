@@ -19,13 +19,13 @@
     </div>
     <div class="card-body">
 
-      <form class="form" ngNativeValidate [(ngModel)]="_form" #questionsForm="ngForm" name="_form" ngDefaultControl
+      <form class="form" ngNativeValidate #questionsForm="ngForm" name="_form" ngDefaultControl
         [class.was-validated]="questionsForm.form.invalid && questionsForm.form.touched"
         (ngSubmit)="createQuestion(questionsForm)">
 
         <div class="form-group required">
           <label class="control-label">Question</label>
-          <textarea class="form-control" rows="3" [(ngModel)]="_question" #question="ngModel" name="_question"
+          <textarea class="form-control" rows="3" [(ngModel)]="_questionObj.question" #question="ngModel" name="_question"
             required></textarea>
 
           <div *ngIf="question.errors?.required && question.touched" class="invalid-feedback">Please fill out this
@@ -35,7 +35,7 @@
 
         <div class="form-group required">
           <label class="control-label">Question type</label>
-          <select class="form-control" [(ngModel)]="_question_type" #questiontype="ngModel" name="_question_type"
+          <select class="form-control" [(ngModel)]="_questionObj.answer_type" #questiontype="ngModel" name="_question_type"
             required>
             <option *ngFor="let qtype of _answer_types" [value]="qtype.id">{{ qtype.answer_type }}</option>
           </select>
@@ -46,8 +46,8 @@
 
         <div class="form-group required">
           <label class="control-label">Date Range</label>
-          <input class="form-control" type="text" required [(ngModel)]="_daterange" #daterange="ngModel"
-            bsDaterangepicker [minDate]="mindate" name="_daterange" (onHidden)="setMinTime(_daterange)">
+          <input class="form-control" type="text" required [(ngModel)]="_questionObj.daterange" #daterange="ngModel"
+            bsDaterangepicker [minDate]="mindate" name="_daterange" (onHidden)="setMinTime(_questionObj.daterange)">
 
           <div *ngIf="daterange.errors?.required && daterange.touched" class="invalid-feedback">Please fill out this
             field!</div>
@@ -58,18 +58,17 @@
 
         <!-- Make time as required field if any issue in time checking occurs when handling future date -->
 
-        <div class="form-group">
-          <label class="control-label">Want to set start time
-            <input type="checkbox" #needStartTime="ngModel" [(ngModel)]="_needStartTime" name="needStartTime"
-              title="Set start time if you wish to! otherwise current time will be loaded as default">
-          </label>
-          <timepicker #time="ngModel" [(ngModel)]="_time" name="time" [min]="minTime" formnovalidate="formnovalidate">
+        <div class="form-group" [hidden]="this.hideTime">
+          <label class="control-label">Start time</label>
+          <timepicker #time="ngModel" [(ngModel)]="_questionObj.time" name="time" [min]="minTime">
           </timepicker>
         </div>
+        <br>
+        <p *ngIf="this.msg != ''" class="alert alert-success">{{this.msg}}</p>
 
         <input type="submit" class="btn btn-success" [disabled]="questionsForm.form.invalid" value="Load Question"
           style="margin-right:15px">
-        <input type="reset" class="btn btn-success" value="Clear">
+        <input type="reset" class="btn btn-success" (click)="this.reset(questionsForm)" value="Clear">
       </form>
 
     </div>
@@ -78,8 +77,18 @@
   <br>
   <hr>
 
-  <button class="btn btn-primary" (click)="this.loadQuestions()">Refresh</button>
+  <!-- <button class="btn btn-primary" (click)="this.loadQuestions()">Refresh (for dev use)</button> -->
 
+  <button class="btn btn-primary" data-toggle="collapse" data-target="#collapseQuestion">Existing Question  
+    <svg class="bi bi-shuffle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M12.646 1.146a.5.5 0 01.708 0l2.5 2.5a.5.5 0 010 .708l-2.5 2.5a.5.5 0 01-.708-.708L14.793 4l-2.147-2.146a.5.5 0 010-.708zm0 8a.5.5 0 01.708 0l2.5 2.5a.5.5 0 010 .708l-2.5 2.5a.5.5 0 01-.708-.708L14.793 12l-2.147-2.146a.5.5 0 010-.708z" clip-rule="evenodd"/>
+      <path fill-rule="evenodd" d="M0 4a.5.5 0 01.5-.5h2c3.053 0 4.564 2.258 5.856 4.226l.08.123c.636.97 1.224 1.865 1.932 2.539.718.682 1.538 1.112 2.632 1.112h2a.5.5 0 010 1h-2c-1.406 0-2.461-.57-3.321-1.388-.795-.755-1.441-1.742-2.055-2.679l-.105-.159C6.186 6.242 4.947 4.5 2.5 4.5h-2A.5.5 0 010 4z" clip-rule="evenodd"/>
+      <path fill-rule="evenodd" d="M0 12a.5.5 0 00.5.5h2c3.053 0 4.564-2.258 5.856-4.226l.08-.123c.636-.97 1.224-1.865 1.932-2.539C11.086 4.93 11.906 4.5 13 4.5h2a.5.5 0 000-1h-2c-1.406 0-2.461.57-3.321 1.388-.795.755-1.441 1.742-2.055 2.679l-.105.159C6.186 9.758 4.947 11.5 2.5 11.5h-2a.5.5 0 00-.5.5z" clip-rule="evenodd"/>
+    </svg>
+    <br>
+    Total count: {{TotalQuestionCount}} | Active count: {{ActiveQuestionCount}}
+  </button>
+  <div class="collapse" id="collapseQuestion">
   <!-- Existing question display table -->
   <table class="table table-striped">
     <caption style="caption-side: top;">Existing Questions</caption>
@@ -92,6 +101,7 @@
         <th>Question type</th>
         <th>Created Time</th>
         <th>Is Active</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -103,10 +113,22 @@
         <td>{{ this.getFilteredAnswertype(question.answer_type) }}</td>
         <td>{{ question.created_time }}</td>
         <td>
-          <div class="alert" [class.alert-success]="this.isActiveDate(question.from, question.to)"
-            [class.alert-danger]="!this.isActiveDate(question.from, question.to)"></div>
+          <div class="alert" [class.alert-success]="question.active"
+            [class.alert-danger]="!question.active"></div>
         </td>
+        <td>
+          <svg (click)="deleteQuestion(question.id)" style="color:red" class="bi bi-x-octagon-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M11.46.146A.5.5 0 0011.107 0H4.893a.5.5 0 00-.353.146L.146 4.54A.5.5 0 000 4.893v6.214a.5.5 0 00.146.353l4.394 4.394a.5.5 0 00.353.146h6.214a.5.5 0 00.353-.146l4.394-4.394a.5.5 0 00.146-.353V4.893a.5.5 0 00-.146-.353L11.46.146zm.394 4.708a.5.5 0 00-.708-.708L8 7.293 4.854 4.146a.5.5 0 10-.708.708L7.293 8l-3.147 3.146a.5.5 0 00.708.708L8 8.707l3.146 3.147a.5.5 0 00.708-.708L8.707 8l3.147-3.146z" clip-rule="evenodd"/>
+          </svg>
+          <!-- <a><i class="material-icons" style="font-size:48px;color:red">delete_forever</i></a> -->
+
+          <!-- <button style="font-size:16px"><i class="material-icons" style="font-size:48px;color:red">delete_forever</i></button></td> -->
       </tr>
     </tbody>
   </table>
+
+  </div>
+  <br><br>
+
+
 </div>
