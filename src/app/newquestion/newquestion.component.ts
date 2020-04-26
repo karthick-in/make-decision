@@ -35,6 +35,9 @@ export class NewquestionComponent implements OnInit {
   }
 
   async loadQuestions() {
+    //resetting count...
+    this.ActiveQuestionCount = this.TotalQuestionCount = 0;
+
     await this._apiService.getQuestions().then(
       questions => {
         this._questions = questions;

@@ -129,7 +129,7 @@ app.put('/customer', function (req, res) {
 
 app.post('/deletequestion', verifyToken, (req, res) => {
   let question = req.body;
-  res.sendStatus(200).end();
+  deleteOptionsIfAny(question);
   connection.query(`DELETE FROM Question WHERE id=${question.id}`, function (error, results, fields) {
     if (error) {
       console.error(`Error occurred ` + error)
@@ -139,6 +139,19 @@ app.post('/deletequestion', verifyToken, (req, res) => {
       res.status(200).end();
   });
 });
+
+function deleteOptionsIfAny(question){
+
+  connection.query(`DELETE FROM Option WHERE question_id=${question.id}`, function (error, results, fields) {
+    if (error) {
+      console.error(`Error occurred ` + error)
+      res.sendStatus(400).end("Error")
+    }else{
+      return;
+    }
+  });
+  
+}
 
 app.get('/verifytoken', verifyToken, (req, res) => {
   res.status(200).end();
