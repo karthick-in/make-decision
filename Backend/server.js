@@ -140,17 +140,17 @@ app.post('/deletequestion', verifyToken, (req, res) => {
   });
 });
 
-function deleteOptionsIfAny(question){
+function deleteOptionsIfAny(question) {
 
   connection.query(`DELETE FROM Option WHERE question_id=${question.id}`, function (error, results, fields) {
     if (error) {
       console.error(`Error occurred ` + error)
       res.sendStatus(400).end("Error")
-    }else{
+    } else {
       return;
     }
   });
-  
+
 }
 
 app.get('/verifytoken', verifyToken, (req, res) => {
